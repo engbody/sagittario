@@ -288,12 +288,12 @@ public class MineSweeper {
                 System.out.print("y: ");
                 int b = reader.nextInt();
                 x.choose(a, b);
-            } else if (input.equals("/game over")) {
+            } else if (input.equals("game over")) {
                 for (int i = 0; i < 50; i++) {
                     System.out.println();
                 }
                 x.displayGameOver();
-            } else if (input.equals("/reveal")) {
+            } else if (input.equals("reveal")) {
                 for (int i = 0; i < 50; i++) {
                     System.out.println();
                 }
@@ -301,12 +301,12 @@ public class MineSweeper {
                 MineSweeper.printGrid(x.neighborGrid);
                 System.out.print("Type any char to continue... ");
                 input = reader.next();
-            } else if (input.equals("/help")) {
+            } else if (input.equals("help")) {
                 System.out.println("");
                 System.out.println(">COMMANDS:");
-                System.out.println("/help: Get list of commands");
-                System.out.println("/reveal: Uncover all tiles");
-                System.out.println("/game over: End the game");
+                System.out.println("help: Get list of commands");
+                System.out.println("reveal: Uncover all tiles");
+                System.out.println("game over: End the game");
                 System.out.print("Type any char to continue... ");
                 input = reader.next();
             }
