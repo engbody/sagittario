@@ -4,27 +4,32 @@ import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MineSweeper {
-    private static final int LENGTH = 8;
-    private static final int BOMBS = 1;
+    
+    // Size of 
+    private int length = 8;
+    private int bombs = 10;
 
     // Grid storing bomb locations
-    private boolean[][] grid = new boolean[LENGTH][LENGTH];
+    private boolean[][] grid = new boolean[this.length][this.length];
     // Grid showing how many bombs are neighboring each slot
-    private int[][] neighborGrid = new int[LENGTH][LENGTH];
+    private int[][] neighborGrid = new int[this.length][this.length];
     /**
      *   DISPLAY GRID ~ grid shown to player
      *      0: Covered
      *      1: Uncovered
      *      2: Flagged
      */
-    public int[][] displayGrid = new int[LENGTH][LENGTH];
+    public int[][] displayGrid = new int[this.length][this.length];
+
+    // Boolean indicating the game status
+    boolean gameOver = false;
 
     // Fills the boolean grid with bombs ('True' means there is a bomb)
     private void fillGrid() {
-        int count = BOMBS;
-        while (count >= 0) {
-            int randX = ThreadLocalRandom.current().nextInt(0, LENGTH);
-            int randY = ThreadLocalRandom.current().nextInt(0, LENGTH);
+        int count = this.bombs;
+        while (count > 0) {
+            int randX = ThreadLocalRandom.current().nextInt(0, this.length);
+            int randY = ThreadLocalRandom.current().nextInt(0, this.length);
             if (this.grid[randX][randY] == false) {
                 this.grid[randX][randY] = true;
                 count--;
@@ -34,8 +39,8 @@ public class MineSweeper {
 
     // Fills Neighbor Grid with corresponding values
     private void getNeighbors() {
-        for (int i = 0; i < LENGTH; i++) {
-            for (int j = 0; j < LENGTH; j++) {
+        for (int i = 0; i < this.length; i++) {
+            for (int j = 0; j < this.length; j++) {
                 if (!this.grid[i][j]) {
                     this.neighborGrid[i][j] = this.neighborCount(i, j);
                 } else {
@@ -51,8 +56,8 @@ public class MineSweeper {
         for (int i = xCoord - 1; i < xCoord + 2; i++) {
             for (int j = yCoord - 1; j < yCoord + 2; j++) {
                 // Check if neighbor tile is in bounds
-                if (i < 0 || i >= LENGTH || j < 0 || j >= LENGTH) {
-                    break;
+                if (i < 0 || i >= this.length || j < 0 || j >= this.length) {
+                    continue;
                 }
                 if (grid[i][j]) {
                     count++;
@@ -66,9 +71,9 @@ public class MineSweeper {
     //     - Created for debugging
     private static void printGrid(final boolean[][] grid) {
         System.out.println();
-        for (int j = 0; j < LENGTH; j++) {
+        for (int j = 0; j < grid.length; j++) {
             System.out.print("|");
-            for (int i = 0; i < LENGTH; i++) {
+            for (int i = 0; i < grid.length; i++) {
                 char val;
                 if (grid[i][j]) {
                     val = 'X';
@@ -82,9 +87,9 @@ public class MineSweeper {
     }
     private static void printGrid(final int[][] grid) {
         System.out.println();
-        for (int j = 0; j < LENGTH; j++) {
+        for (int j = 0; j < grid.length; j++) {
             System.out.print("|");
-            for (int i = 0; i < LENGTH; i++) {
+            for (int i = 0; i < grid.length; i++) {
                 if (grid[i][j] == 9) {
                     System.out.print("X|");
                 } else {
@@ -98,9 +103,10 @@ public class MineSweeper {
     // dislays what the player would see
     private void displayGrid() {
         System.out.println("  <DISPLAY GRID>");
-        for (int j = 0; j < LENGTH; j++) {
+        System.out.println(" 0 1 2 3 4 5 6 7");
+        for (int j = 0; j < this.length; j++) {
             System.out.print("|");
-            for (int i = 0; i < LENGTH; i++) {
+            for (int i = 0; i < this.length; i++) {
                 if (this.displayGrid[i][j] == 0) {
                     System.out.print("O");
                 } else if (this.displayGrid[i][j] == 1) {
@@ -114,13 +120,14 @@ public class MineSweeper {
                 }
                 System.out.print("|");
             }
+            System.out.print(" " + j);
             System.out.println();
         }
     }
 
     // flags a tile
     private void flag(final int xCoord, final int yCoord) {
-        if (xCoord < 0 || xCoord >= LENGTH || yCoord < 0 || yCoord >= LENGTH) {
+        if (xCoord < 0 || xCoord >= this.length || yCoord < 0 || yCoord >= this.length) {
             return;
         }
         if (this.displayGrid[xCoord][yCoord] == 2) {
@@ -134,7 +141,7 @@ public class MineSweeper {
     // Function to attempt to reveal a tile. It won't work on
     //      out of bounds or flagged tiles
     private void choose(final int xCoord, final int yCoord) {
-        if (xCoord < 0 || xCoord >= LENGTH || yCoord < 0 || yCoord >= LENGTH) {
+        if (xCoord < 0 || xCoord >= this.length || yCoord < 0 || yCoord >= this.length) {
             return;
         }
         if (this.displayGrid[xCoord][yCoord] == 2) {
@@ -156,43 +163,48 @@ public class MineSweeper {
      int b;
      a = xCoord + 1;
      b = yCoord;
-     if (a < LENGTH && b < LENGTH && a >= 0 && b >= 0 && this.neighborGrid[a][b] == 0 ) {
+     if (a < this.length && b < this.length && a >= 0 && b >= 0 && this.neighborGrid[a][b] == 0 ) {
      this.reveal(a, b);
      }
      a = xCoord - 1;
      b = yCoord;
-     if (a < LENGTH && b < LENGTH && a >= 0 && b >= 0 && this.neighborGrid[a][b] == 0 ) {
+     if (a < this.length && b < this.length && a >= 0 && b >= 0 && this.neighborGrid[a][b] == 0 ) {
      this.reveal(a, b);
      }
      a = xCoord;
      b = yCoord + 1;
-     if (a < LENGTH && b < LENGTH && a >= 0 && b >= 0 && this.neighborGrid[a][b] == 0 ) {
+     if (a < this.length && b < this.length && a >= 0 && b >= 0 && this.neighborGrid[a][b] == 0 ) {
      this.reveal(a, b);
      }
      a = xCoord;
      b = yCoord - 1;
-     if (a < LENGTH && b < LENGTH && a >= 0 && b >= 0 && this.neighborGrid[a][b] == 0 ) {
+     if (a < this.length && b < this.length && a >= 0 && b >= 0 && this.neighborGrid[a][b] == 0 ) {
      this.reveal(a, b);
      }
      **/
-
     // Reveals all inter-connected 0 spaces;
     public void reveal(final int xCoord, final int yCoord) {
         System.out.println("Running at coords (" + xCoord + "," + yCoord + ")");
-        if (xCoord >= LENGTH || xCoord < 0 || yCoord >= LENGTH || yCoord < 0) {
+        if (xCoord >= this.length || xCoord < 0 || yCoord >= this.length || yCoord < 0) {
             return;
         }
         if (!this.grid[xCoord][yCoord] && this.displayGrid[xCoord][yCoord] == 0) {
             this.displayGrid[xCoord][yCoord] = 1;
-            this.reveal(xCoord + 1, yCoord);
-            this.reveal(xCoord - 1, yCoord);
-            this.reveal(xCoord, yCoord + 1);
-            this.reveal(xCoord, yCoord - 1);
+            if (this.neighborGrid[xCoord][yCoord] == 0){
+                this.reveal(xCoord + 1, yCoord);
+                this.reveal(xCoord - 1, yCoord);
+                this.reveal(xCoord + 1, yCoord + 1);
+                this.reveal(xCoord - 1, yCoord - 1);
+                this.reveal(xCoord, yCoord + 1);
+                this.reveal(xCoord, yCoord - 1);
+                this.reveal(xCoord + 1, yCoord - 1);
+                this.reveal(xCoord - 1, yCoord + 1);
+            }
         }
     }
     public void reveal(final int xCoord, final int yCoord, final boolean check) {
         System.out.println("FIRST RUN! :)");
-        if (xCoord >= LENGTH || xCoord < 0 || yCoord >= LENGTH || yCoord < 0) {
+        if (xCoord >= this.length || xCoord < 0 || yCoord >= this.length || yCoord < 0) {
             return;
         }
         this.displayGrid[xCoord][yCoord] = 1;
@@ -204,10 +216,11 @@ public class MineSweeper {
 
     // Displays game over screen
     private void displayGameOver() {
+        this.gameOver = true;
         System.out.println("  <GAME OVER!>");
-        for (int j = 0; j < LENGTH; j++) {
+        for (int j = 0; j < this.length; j++) {
             System.out.print("|");
-            for (int i = 0; i < LENGTH; i++) {
+            for (int i = 0; i < this.length; i++) {
                 if (this.displayGrid[i][j] == 0) {
                     if (this.grid[i][j]) {
                         System.out.print("X");
@@ -229,18 +242,31 @@ public class MineSweeper {
         }
     }
 
+    // Constructor, lays the bombs and neighbor values
     private MineSweeper() {
         this.fillGrid();
         this.getNeighbors();
-        for (int i = 0; i < LENGTH; i++) {
-            for (int j = 0;  j< LENGTH; j++) {
+        for (int i = 0; i < this.length; i++) {
+            for (int j = 0;  j< this.length; j++) {
                 this.displayGrid[i][j] = 0;
             }
         }
     }
+
+    private MineSweeper(final int size, final int numBombs) {
+        this.length = size;
+        this.fillGrid();
+        this.getNeighbors();
+        for (int i = 0; i < this.length; i++) {
+            for (int j = 0;  j< this.length; j++) {
+                this.displayGrid[i][j] = 0;
+            }
+        }
+    }
+
     public static void main(String[] unused) {
         MineSweeper x = new MineSweeper();
-        while (true) {
+        while (!x.gameOver) {
             Scanner reader = new Scanner(System.in); // Reading from System.in
             for (int i = 0; i < 50; i++) {
                 System.out.println();
@@ -262,6 +288,27 @@ public class MineSweeper {
                 System.out.print("y: ");
                 int b = reader.nextInt();
                 x.choose(a, b);
+            } else if (input.equals("/game over")) {
+                for (int i = 0; i < 50; i++) {
+                    System.out.println();
+                }
+                x.displayGameOver();
+            } else if (input.equals("/reveal")) {
+                for (int i = 0; i < 50; i++) {
+                    System.out.println();
+                }
+                System.out.println("> Displaying Neighbors");
+                MineSweeper.printGrid(x.neighborGrid);
+                System.out.print("Type any char to continue... ");
+                input = reader.next();
+            } else if (input.equals("/help")) {
+                System.out.println("");
+                System.out.println(">COMMANDS:");
+                System.out.println("/help: Get list of commands");
+                System.out.println("/reveal: Uncover all tiles");
+                System.out.println("/game over: End the game");
+                System.out.print("Type any char to continue... ");
+                input = reader.next();
             }
         }
     }
