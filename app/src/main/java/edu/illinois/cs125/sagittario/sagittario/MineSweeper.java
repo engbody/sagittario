@@ -136,6 +136,9 @@ public class MineSweeper {
         if (this.displayGrid[xCoord][yCoord] == 2) {
             return;
         } else if (this.displayGrid[xCoord][yCoord] == 0) {
+            if (this.grid[xCoord][yCoord]) {
+                this.displayGameOver();
+            }
             this.displayGrid[xCoord][yCoord] = 2;
         } else if (this.displayGrid[xCoord][yCoord] == 1) {
             return;
