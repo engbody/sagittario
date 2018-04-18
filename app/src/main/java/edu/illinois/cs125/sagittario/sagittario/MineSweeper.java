@@ -1,10 +1,11 @@
 package edu.illinois.cs125.sagittario.sagittario;
 
+import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MineSweeper {
     private static final int LENGTH = 8;
-    private static final int BOMBS = 10;
+    private static final int BOMBS = 1;
 
     // Grid storing bomb locations
     private boolean[][] grid = new boolean[LENGTH][LENGTH];
@@ -129,6 +130,9 @@ public class MineSweeper {
         }
     }
 
+
+    // Function to attempt to reveal a tile. It won't work on
+    //      out of bounds or flagged tiles
     private void choose(final int xCoord, final int yCoord) {
         if (xCoord < 0 || xCoord >= LENGTH || yCoord < 0 || yCoord >= LENGTH) {
             return;
@@ -138,11 +142,64 @@ public class MineSweeper {
         } else if (this.displayGrid[xCoord][yCoord] == 0) {
             if (this.grid[xCoord][yCoord]) {
                 this.displayGameOver();
+                return;
             }
-            this.displayGrid[xCoord][yCoord] = 2;
+            this.reveal(xCoord, yCoord, true);
         } else if (this.displayGrid[xCoord][yCoord] == 1) {
             return;
         }
+    }
+
+    /**
+     this.displayGrid[xCoord][yCoord] = 1;
+     int a;
+     int b;
+     a = xCoord + 1;
+     b = yCoord;
+     if (a < LENGTH && b < LENGTH && a >= 0 && b >= 0 && this.neighborGrid[a][b] == 0 ) {
+     this.reveal(a, b);
+     }
+     a = xCoord - 1;
+     b = yCoord;
+     if (a < LENGTH && b < LENGTH && a >= 0 && b >= 0 && this.neighborGrid[a][b] == 0 ) {
+     this.reveal(a, b);
+     }
+     a = xCoord;
+     b = yCoord + 1;
+     if (a < LENGTH && b < LENGTH && a >= 0 && b >= 0 && this.neighborGrid[a][b] == 0 ) {
+     this.reveal(a, b);
+     }
+     a = xCoord;
+     b = yCoord - 1;
+     if (a < LENGTH && b < LENGTH && a >= 0 && b >= 0 && this.neighborGrid[a][b] == 0 ) {
+     this.reveal(a, b);
+     }
+     **/
+
+    // Reveals all inter-connected 0 spaces;
+    public void reveal(final int xCoord, final int yCoord) {
+        System.out.println("Running at coords (" + xCoord + "," + yCoord + ")");
+        if (xCoord >= LENGTH || xCoord < 0 || yCoord >= LENGTH || yCoord < 0) {
+            return;
+        }
+        if (!this.grid[xCoord][yCoord] && this.displayGrid[xCoord][yCoord] == 0) {
+            this.displayGrid[xCoord][yCoord] = 1;
+            this.reveal(xCoord + 1, yCoord);
+            this.reveal(xCoord - 1, yCoord);
+            this.reveal(xCoord, yCoord + 1);
+            this.reveal(xCoord, yCoord - 1);
+        }
+    }
+    public void reveal(final int xCoord, final int yCoord, final boolean check) {
+        System.out.println("FIRST RUN! :)");
+        if (xCoord >= LENGTH || xCoord < 0 || yCoord >= LENGTH || yCoord < 0) {
+            return;
+        }
+        this.displayGrid[xCoord][yCoord] = 1;
+        this.reveal(xCoord + 1, yCoord);
+        this.reveal(xCoord - 1, yCoord);
+        this.reveal(xCoord, yCoord + 1);
+        this.reveal(xCoord, yCoord - 1);
     }
 
     // Displays game over screen
@@ -181,15 +238,31 @@ public class MineSweeper {
             }
         }
     }
-
     public static void main(String[] unused) {
         MineSweeper x = new MineSweeper();
-        MineSweeper.printGrid(x.grid);
-        x.displayGrid();
-        x.flag(2,4);
-        x.displayGrid();
-        x.flag(5,7);
-        x.displayGrid();
-        x.displayGameOver();
+        while (true) {
+            Scanner reader = new Scanner(System.in); // Reading from System.in
+            for (int i = 0; i < 50; i++) {
+                System.out.println();
+            }
+            x.displayGrid();
+            System.out.print("Enter \"flag\" or \"choose\": ");
+            String input = reader.nextLine();
+            if (input.equals("flag")) {
+                System.out.println("Coordinates to Flag");
+                System.out.print("x: ");
+                int a = reader.nextInt(); // Scans the next token of the input as an int.
+                System.out.print("y: ");
+                int b = reader.nextInt();
+                x.flag(a, b);
+            } else if (input.equals("choose")) {
+                System.out.println("Coordinates to Reveal");
+                System.out.print("x: ");
+                int a = reader.nextInt(); // Scans the next token of the input as an int.
+                System.out.print("y: ");
+                int b = reader.nextInt();
+                x.choose(a, b);
+            }
+        }
     }
 }
