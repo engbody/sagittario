@@ -16,8 +16,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public Button startButton;
 
-    public ProgressBar bar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +25,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         searchText = (EditText) findViewById(R.id.editSearch);
         startButton = (Button) findViewById(R.id.btnStart);
         startButton.setOnClickListener(this);
-        bar = (ProgressBar)findViewById(R.id.progressBar);
     }
 
     @Override
@@ -42,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int nBombs = Integer.parseInt(this.nBombs.getText().toString());
         intent.putExtra("fieldSize", fieldSize);
         intent.putExtra("nBombs", nBombs);
-        intent.putExtra("searchText", searchText.toString());
+        intent.putExtra("searchText", searchText.getText().toString());
         startActivity(intent);
     }
 
@@ -50,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void run() {
         // Will be called when finished loading
-        bar.setVisibility(View.INVISIBLE);
         Intent intent = new Intent(this, MinesweeperActivity.class);
         int fieldSize= Integer.parseInt(this.fieldSize.getText().toString());
         int nBombs = Integer.parseInt(this.nBombs.getText().toString());

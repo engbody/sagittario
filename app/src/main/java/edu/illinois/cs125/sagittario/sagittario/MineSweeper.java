@@ -15,7 +15,7 @@ public class MineSweeper {
     // Grid storing bomb locations
     private boolean[][] grid;
     // Grid showing how many nBombs are neighboring each slot
-    private int[][] neighborGrid;
+    public int[][] neighborGrid;
     /**
      * DISPLAY GRID ~ grid shown to player
      * 0: Covered

@@ -23,7 +23,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <edu.illinois.cs125.sagittario.sagittario.MinesweeperActivity.CanvasView
+    <edu.illinois.cs125.sagittario.sagittario.CanvasView
         android:id="@+id/canvasView"
         android:layout_width="368dp"
         android:layout_height="495dp"
