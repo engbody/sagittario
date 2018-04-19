@@ -40,7 +40,7 @@ public class ImageProvider {
      */
     private static String key1 = "a233c0220de5457080c0e45b2e2b02d2";
     // key2 cdbef221ec2147ae8fb7d7e14584284d
-    public ImageProvider(String searchString, RequestQueue queue){
+    public ImageProvider(String searchString, RequestQueue queue, final Runnable run){
         this.searchString = searchString;
         String url = String.format(apiEndpoint, searchString);
         this.queue = queue;
@@ -68,6 +68,7 @@ public class ImageProvider {
                                 input.close();
                                 ///
                                 ready = true;
+                                run.run();
                                 return;
                             } catch (Throwable t) {
                                 // TODO handle throwable

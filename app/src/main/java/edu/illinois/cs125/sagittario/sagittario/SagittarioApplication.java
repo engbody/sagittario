@@ -32,15 +32,8 @@ public class SagittarioApplication extends Application {
      * @param searchString
      * @return
      */
-    public ImageProvider createImageProvider(String searchString){
-        return currentProvider = new ImageProvider(searchString, requestQueue);
-    }
-
-
-    public void startSearch(String searchText, int fieldSize, int nbombs){
-        //TODO
-        createImageProvider(searchText);
-
+    public ImageProvider createImageProvider(String searchString, Runnable r){
+        return currentProvider = new ImageProvider(searchString, requestQueue, r);
     }
 
 }
