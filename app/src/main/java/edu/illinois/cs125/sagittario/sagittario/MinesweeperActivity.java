@@ -4,9 +4,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+
+import java.util.Timer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class MinesweeperActivity extends AppCompatActivity implements Runnable {
     private SagittarioApplication app;
@@ -23,11 +31,28 @@ public class MinesweeperActivity extends AppCompatActivity implements Runnable {
     protected Bitmap flag;
     protected Bitmap bomb;
 
+    private Handler mHandler;
+
     @Override
     public void run() {
         loading.setVisibility(View.INVISIBLE);
+        Log.e("MineSweeper", "Re-entered Activity!");
         background = provider.getBackground();
         loaded = true;
+        Runnable next = new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    view.invalidate();
+                    Log.v("DrawRunner", "Invalidated View!");
+                } catch (Throwable t) {
+                    Log.e("DrawRunner", "Exception: ", t);
+                } finally {
+                    mHandler.postDelayed(this, 30);
+                }
+            }
+        };
+        mHandler.postDelayed(next, 10);
     }
 
     @Override
@@ -55,7 +80,6 @@ public class MinesweeperActivity extends AppCompatActivity implements Runnable {
         app = (SagittarioApplication) this.getApplication();
         provider = app.createImageProvider(searchText, this);
         loading.setVisibility(View.VISIBLE);
+        mHandler = new Handler();
     }
-
-
 }

@@ -76,6 +76,7 @@ public class ImageProvider {
                                         ready = true;
                                         Log.e("Image Provider", "Download Complete!");
                                         run.run();
+                                        Log.e("Image Provider", "Ran runnable");
                                     } catch (Throwable ignored) {
                                     }
                                 }
