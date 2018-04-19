@@ -1,5 +1,6 @@
 package edu.illinois.cs125.sagittario.sagittario;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -31,11 +32,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        bar.setVisibility(View.VISIBLE);
-        SagittarioApplication app = (SagittarioApplication)getApplication();
-        app.fieldSize = Integer.parseInt(fieldSize.getText().toString());
-        app.nbombs = Integer.parseInt(nBombs.getText().toString());
-        app.createImageProvider(searchText.toString(), this);
+//        bar.setVisibility(View.VISIBLE);
+//        SagittarioApplication app = (SagittarioApplication)getApplication();
+//        app.fieldSize = Integer.parseInt(fieldSize.getText().toString());
+//        app.nbombs = Integer.parseInt(nBombs.getText().toString());
+//        app.createImageProvider(searchText.toString(), this);
+        Intent intent = new Intent(this, MinesweeperActivity.class);
+        int fieldSize= Integer.parseInt(this.fieldSize.getText().toString());
+        int nBombs = Integer.parseInt(this.nBombs.getText().toString());
+        intent.putExtra("fieldSize", fieldSize);
+        intent.putExtra("nBombs", nBombs);
+        intent.putExtra("searchText", searchText.toString());
+        startActivity(intent);
     }
 
 
@@ -43,6 +51,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void run() {
         // Will be called when finished loading
         bar.setVisibility(View.INVISIBLE);
-        setContentView(R.layout.activity_minesweeper);
+        Intent intent = new Intent(this, MinesweeperActivity.class);
+        int fieldSize= Integer.parseInt(this.fieldSize.getText().toString());
+        int nBombs = Integer.parseInt(this.nBombs.getText().toString());
+        intent.putExtra("fieldSize", fieldSize);
+        intent.putExtra("nBombs", nBombs);
+        intent.putExtra("searchText", searchText.toString());
+        startActivity(intent);
     }
 }

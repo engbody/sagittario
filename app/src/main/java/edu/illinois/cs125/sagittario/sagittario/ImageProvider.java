@@ -112,4 +112,8 @@ public class ImageProvider {
         //
         return image;
     }
+
+    public Bitmap getBackground() {
+        return image;
+    }
 }

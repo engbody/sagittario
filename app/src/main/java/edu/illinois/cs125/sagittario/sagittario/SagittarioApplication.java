@@ -13,6 +13,7 @@ public class SagittarioApplication extends Application {
 
     public int fieldSize = -1;
     public int nbombs = -1;
+    public boolean initialized = false;
 
     @Override
     public ApplicationInfo getApplicationInfo() {
@@ -33,6 +34,7 @@ public class SagittarioApplication extends Application {
      * @return
      */
     public ImageProvider createImageProvider(String searchString, Runnable r){
+        initialized = true;
         return currentProvider = new ImageProvider(searchString, requestQueue, r);
     }
 
