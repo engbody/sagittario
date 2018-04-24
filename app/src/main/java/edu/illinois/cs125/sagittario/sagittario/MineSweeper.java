@@ -27,6 +27,9 @@ public class MineSweeper {
     // Boolean indicating the game status
     boolean gameOver = false;
 
+    // Count of flags put up
+    public int flagCount = 0;
+
     private boolean outOfBounds(final int x, final int y) {
         return x < 0 || x >= this.fieldSize || y < 0 || y >= this.fieldSize;
     }
@@ -110,15 +113,15 @@ public class MineSweeper {
         for (int j = 0; j < this.fieldSize; j++) {
             System.out.print("|");
             for (int i = 0; i < this.fieldSize; i++) {
-                if (this.displayGrid[i][j] == 0) {
+                if (this.displayGrid[i][j] == COVERED) {
                     System.out.print("O");
-                } else if (this.displayGrid[i][j] == 1) {
-                    if (this.neighborGrid[i][j] == 0) {
+                } else if (this.displayGrid[i][j] == UNCOVERED) {
+                    if (this.neighborGrid[i][j] == COVERED) {
                         System.out.print("_");
                     } else {
                         System.out.print(this.neighborGrid[i][j]);
                     }
-                } else if (this.displayGrid[i][j] == 2) {
+                } else if (this.displayGrid[i][j] == FLAGGED) {
                     System.out.print("F");
                 }
                 System.out.print("|");
@@ -135,8 +138,10 @@ public class MineSweeper {
         }
         if (this.displayGrid[xCoord][yCoord] == FLAGGED) {
             this.displayGrid[xCoord][yCoord] = COVERED;
+            flagCount--;
         } else if (this.displayGrid[xCoord][yCoord] == COVERED) {
             this.displayGrid[xCoord][yCoord] = FLAGGED;
+            flagCount++;
         }
     }
 
@@ -191,7 +196,7 @@ public class MineSweeper {
         if (outOfBounds(xCoord, yCoord)) {
             return;
         }
-        if (!this.grid[xCoord][yCoord] && this.displayGrid[xCoord][yCoord] == 0) {
+        if (!this.grid[xCoord][yCoord] && this.displayGrid[xCoord][yCoord] == COVERED) {
             this.displayGrid[xCoord][yCoord] = 1;
             if (this.neighborGrid[xCoord][yCoord] == 0) {
                 this.reveal(xCoord + 1, yCoord);
@@ -211,11 +216,19 @@ public class MineSweeper {
         if (outOfBounds(xCoord, yCoord)) {
             return;
         }
-        this.displayGrid[xCoord][yCoord] = 1;
+        if (this.neighborGrid[xCoord][yCoord] != 0) {
+            this.displayGrid[xCoord][yCoord] = UNCOVERED;
+            return;
+        }
+        this.displayGrid[xCoord][yCoord] = UNCOVERED;
         this.reveal(xCoord + 1, yCoord);
         this.reveal(xCoord - 1, yCoord);
+        this.reveal(xCoord + 1, yCoord + 1);
+        this.reveal(xCoord - 1, yCoord - 1);
         this.reveal(xCoord, yCoord + 1);
         this.reveal(xCoord, yCoord - 1);
+        this.reveal(xCoord + 1, yCoord - 1);
+        this.reveal(xCoord - 1, yCoord + 1);
     }
 
     // Displays game over screen
@@ -258,13 +271,14 @@ public class MineSweeper {
     }
 
     public static void main(String[] unused) {
-        MineSweeper x = new MineSweeper(8, 10);
+        MineSweeper x = new MineSweeper(8, 30);
         while (!x.gameOver) {
             Scanner reader = new Scanner(System.in); // Reading from System.in
             for (int i = 0; i < 50; i++) {
                 System.out.println();
             }
             x.displayGrid();
+            System.out.println("Flags: |" + (x.nBombs - x.flagCount) + "|");
             System.out.print("Enter \"flag\" or \"choose\": ");
             String input = reader.nextLine();
             if (input.equals("flag")) {
