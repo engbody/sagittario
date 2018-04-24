@@ -5,8 +5,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class MineSweeper {
     
-    // Size of 
+    // Size of MineSweeper grid
     private int length = 8;
+    // Number of bombs placed
     private int bombs = 10;
 
     // Grid storing bomb locations
@@ -103,7 +104,10 @@ public class MineSweeper {
     // dislays what the player would see
     private void displayGrid() {
         System.out.println("  <DISPLAY GRID>");
-        System.out.println(" 0 1 2 3 4 5 6 7");
+        for (int i = 0; i < this.length; i++) {
+            System.out.print(" " + i);
+        }
+        System.out.println();
         for (int j = 0; j < this.length; j++) {
             System.out.print("|");
             for (int i = 0; i < this.length; i++) {
@@ -205,6 +209,10 @@ public class MineSweeper {
     public void reveal(final int xCoord, final int yCoord, final boolean check) {
         System.out.println("FIRST RUN! :)");
         if (xCoord >= this.length || xCoord < 0 || yCoord >= this.length || yCoord < 0) {
+            return;
+        }
+        if (neighborGrid[xCoord][yCoord] != 0) {
+            this.displayGrid[xCoord][yCoord] = 1;
             return;
         }
         this.displayGrid[xCoord][yCoord] = 1;
