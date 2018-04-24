@@ -156,7 +156,7 @@ public class MineSweeper {
             return;
         } else if (this.displayGrid[xCoord][yCoord] == COVERED) {
             if (this.grid[xCoord][yCoord]) {
-                this.displayGameOver();
+                gameOver = true;
                 return;
             }
             this.reveal(xCoord, yCoord, true);
@@ -295,6 +295,9 @@ public class MineSweeper {
                 System.out.print("y: ");
                 int b = reader.nextInt();
                 x.choose(a, b);
+                if (x.gameOver) {
+                    x.displayGameOver();
+                }
             } else if (input.equals("game over")) {
                 for (int i = 0; i < 50; i++) {
                     System.out.println();
