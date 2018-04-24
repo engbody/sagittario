@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.illinois.cs125.sagittario.sagittario">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".SagittarioApplication"
         android:allowBackup="true"

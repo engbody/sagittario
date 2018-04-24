@@ -1,12 +1,14 @@
 package edu.illinois.cs125.sagittario.sagittario;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, Runnable{
 
     public EditText nBombs, fieldSize;
 
@@ -27,9 +29,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        SagittarioApplication app = (SagittarioApplication)getApplication();
-        app.fieldSize = Integer.parseInt(fieldSize.getText().toString());
-        app.nbombs = Integer.parseInt(nBombs.getText().toString());
-        app.createImageProvider(searchText.toString());
+//        bar.setVisibility(View.VISIBLE);
+//        SagittarioApplication app = (SagittarioApplication)getApplication();
+//        app.fieldSize = Integer.parseInt(fieldSize.getText().toString());
+//        app.nbombs = Integer.parseInt(nBombs.getText().toString());
+//        app.createImageProvider(searchText.toString(), this);
+        Intent intent = new Intent(this, MinesweeperActivity.class);
+        int fieldSize= Integer.parseInt(this.fieldSize.getText().toString());
+        int nBombs = Integer.parseInt(this.nBombs.getText().toString());
+        intent.putExtra("fieldSize", fieldSize);
+        intent.putExtra("nBombs", nBombs);
+        intent.putExtra("searchText", searchText.getText().toString());
+        startActivity(intent);
+    }
+
+
+    @Override
+    public void run() {
+        // Will be called when finished loading
+        Intent intent = new Intent(this, MinesweeperActivity.class);
+        int fieldSize= Integer.parseInt(this.fieldSize.getText().toString());
+        int nBombs = Integer.parseInt(this.nBombs.getText().toString());
+        intent.putExtra("fieldSize", fieldSize);
+        intent.putExtra("nBombs", nBombs);
+        intent.putExtra("searchText", searchText.toString());
+        startActivity(intent);
     }
 }
