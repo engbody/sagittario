@@ -30,8 +30,14 @@ public class MinesweeperActivity extends AppCompatActivity implements Runnable {
     protected Drawable tile, uncovered;
     protected Bitmap flag;
     protected Bitmap bomb;
+    protected GameState state;
 
     private Handler mHandler;
+
+
+    public enum GameState{
+        PLAYING, WON, LOST;
+    }
 
     @Override
     public void run() {
@@ -58,6 +64,7 @@ public class MinesweeperActivity extends AppCompatActivity implements Runnable {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        state = GameState.PLAYING;
         setContentView(R.layout.activity_minesweeper);
         // init settings and minesweeper
         int fieldSize = getIntent().getIntExtra("fieldSize", 8);

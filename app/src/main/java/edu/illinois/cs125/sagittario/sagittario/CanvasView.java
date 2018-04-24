@@ -152,11 +152,17 @@ public class CanvasView extends View {
                         canvas.drawBitmap(activity.bomb, null, rect2, null);
                     } else if (count > 0) {
                         float x = (rect2.left) + deltaX / 2.0f;
-                        float y = (rect2.bottom) + deltaY / 2.0f;
+                        float y = (rect2.bottom) - deltaY / 2.0f;
+                        paint.setColor(Color.BLACK);
+                        paint.setStyle(Paint.Style.STROKE);
+                        canvas.drawText(Integer.toString(count), x, y, paint);
+                        paint.setColor(Color.WHITE);
+                        paint.setStyle(Paint.Style.FILL);
                         canvas.drawText(Integer.toString(count), x, y, paint);
                     }
                 }
             }
+            paint.setStyle(Paint.Style.FILL);
             paint.setColor(Color.BLACK);
             canvas.drawLine(deltaX * i, 0, deltaX * i, getHeight(), paint);
         }
