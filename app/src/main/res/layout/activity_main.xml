@@ -66,7 +66,7 @@
         android:layout_marginBottom="195dp"
         android:ems="10"
         android:inputType="textAutoCorrect|textAutoComplete"
-        android:text="minesweeper"
+        android:text="brick"
         android:textAlignment="center"
         android:textColor="@android:color/darker_gray" />
 

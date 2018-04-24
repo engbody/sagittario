@@ -51,6 +51,8 @@ public class CanvasView extends View {
         paint = new Paint();
         paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.FILL);
+        paint.setStrokeWidth(2);
+        paint.setTextSize(32 * getResources().getDisplayMetrics().density);
         setWillNotDraw(false);
         setMinimumHeight(800);
         setMinimumWidth(640);
@@ -109,13 +111,18 @@ public class CanvasView extends View {
             canvas.drawColor(0xFFCCFF);
             return;
         }
-        Log.v("Canvas View", "Drawing");
+//        Log.v("Canvas View", "Drawing");
         // todo draw the field
         final int deltaX = this.getWidth() / activity.sweeper.fieldSize;
         final int deltaY = this.getHeight() / activity.sweeper.fieldSize;
 
         final int offsetX = 0;
         final int offsetY = 0;
+
+        boundingRect.left = getLeft();
+        boundingRect.top = getTop();
+        boundingRect.right = getRight();
+        boundingRect.bottom = getBottom();
 
         canvas.drawBitmap(activity.background, null, boundingRect, null);
 
@@ -126,25 +133,37 @@ public class CanvasView extends View {
                 rect2.right = offsetX + deltaX * (i + 1);
                 rect2.top = offsetY + deltaY * j;
                 rect2.bottom = offsetY + deltaY * (j + 1);
+                // draw covered tiles
                 if (activity.sweeper.displayGrid[i][j] != MineSweeper.UNCOVERED) {
-                    activity.tile.setBounds(rect2);
-                    activity.tile.draw(canvas);
+//                    activity.tile.setBounds(rect2);
+//                    activity.tile.draw(canvas);
+                    activity.uncovered.setBounds(rect2);
+                    activity.uncovered.draw(canvas);
                 }
+                // draw flag on top
                 if (activity.sweeper.displayGrid[i][j] == MineSweeper.FLAGGED) {
                     canvas.drawBitmap(activity.flag, null, rect2, null);
                 }
                 if (activity.sweeper.displayGrid[i][j] == MineSweeper.UNCOVERED) {
-                    activity.uncovered.setBounds(rect2);
-                    activity.uncovered.draw(canvas);
+//                    activity.uncovered.setBounds(rect2);
+//                    activity.uncovered.draw(canvas);
                     final int count = activity.sweeper.neighborGrid[i][j];
                     if (count == 9) {
                         canvas.drawBitmap(activity.bomb, null, rect2, null);
                     } else if (count > 0) {
-                        Log.i("CanvasView", "Drawing number at " + i + ", " + j);
-                        canvas.drawText(Integer.toString(count), rect2.left, rect2.bottom, paint);
+                        float x = (rect2.left) + deltaX / 2.0f;
+                        float y = (rect2.bottom) + deltaY / 2.0f;
+                        canvas.drawText(Integer.toString(count), x, y, paint);
                     }
                 }
             }
+            paint.setColor(Color.BLACK);
+            canvas.drawLine(deltaX * i, 0, deltaX * i, getHeight(), paint);
+        }
+        for(int i = 0; i < activity.sweeper.fieldSize; i++){
+            float y = deltaY * i;
+            paint.setColor(Color.BLACK);
+            canvas.drawLine(0, y, getWidth(), y, paint);
         }
     }
 }
