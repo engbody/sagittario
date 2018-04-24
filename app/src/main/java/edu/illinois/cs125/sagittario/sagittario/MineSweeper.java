@@ -129,7 +129,7 @@ public class MineSweeper {
     }
 
     // flags a tile
-    private void flag(final int xCoord, final int yCoord) {
+    public void flag(final int xCoord, final int yCoord) {
         if(outOfBounds(xCoord, yCoord)){
             return;
         }

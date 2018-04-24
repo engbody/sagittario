@@ -3,6 +3,7 @@ package edu.illinois.cs125.sagittario.sagittario;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
@@ -48,6 +49,8 @@ public class CanvasView extends View {
         boundingRect = new Rect(0, 0, xSize, ySize);
         rect2 = new Rect(0, 0, 0, 0);
         paint = new Paint();
+        paint.setColor(Color.BLACK);
+        paint.setStyle(Paint.Style.FILL);
         setWillNotDraw(false);
         setMinimumHeight(800);
         setMinimumWidth(640);
@@ -63,11 +66,25 @@ public class CanvasView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        Log.i("CanvasView", "motion event!" + event.getAction());
+
+        if (event.getAction() == MotionEvent.ACTION_DOWN){
+            return true;
+        }
+
         if (event.getAction() == MotionEvent.ACTION_UP && activity.loaded){
-            int x = (int) event.getX() / activity.sweeper.fieldSize;
-            int y = (int) event.getY() / activity.sweeper.fieldSize;
-            Log.d("CanvasView", "Revealing at " + x + ", " + y + ".");
-            activity.sweeper.reveal(x, y);
+            final int deltaX = this.getWidth() / activity.sweeper.fieldSize;
+            final int deltaY = this.getHeight() / activity.sweeper.fieldSize;
+            int x = (int) event.getX() / deltaX;
+            int y = (int) event.getY() / deltaY;
+            long timeDown = event.getEventTime() - event.getDownTime();
+            if(timeDown < 300) {
+                Log.d("CanvasView", "Revealing at " + x + ", " + y + ".");
+                activity.sweeper.choose(x, y);
+            } else {
+                Log.d("CanvasView", "Flagging at " + x + ", " + y + ".");
+                activity.sweeper.flag(x, y);
+            }
         }
         return super.onTouchEvent(event);
     }
@@ -123,6 +140,7 @@ public class CanvasView extends View {
                     if (count == 9) {
                         canvas.drawBitmap(activity.bomb, null, rect2, null);
                     } else if (count > 0) {
+                        Log.i("CanvasView", "Drawing number at " + i + ", " + j);
                         canvas.drawText(Integer.toString(count), rect2.left, rect2.bottom, paint);
                     }
                 }
