@@ -1,13 +1,17 @@
 package edu.illinois.cs125.sagittario.sagittario;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -72,6 +76,35 @@ public class CanvasView extends View {
             if(timeDown < 300) {
                 Log.d("CanvasView", "Revealing at " + x + ", " + y + ".");
                 activity.sweeper.choose(x, y);
+                if (activity.sweeper.gameOver) {
+                    if (activity.sweeper.gameWon) {
+                        // WIN ACTIVITY
+                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setMessage("You WON!");
+                        builder.setCancelable(false);
+                        builder.setPositiveButton("Menu", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent intent = new Intent(activity, MainActivity.class);
+                                activity.startActivity(intent);
+                            }
+                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    } else {
+                        // LOSE ACTIVITY
+                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setMessage("You LOST!");
+                        builder.setCancelable(false);
+                        builder.setPositiveButton("Menu", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent intent = new Intent(activity, MainActivity.class);
+                                activity.startActivity(intent);
+                            }
+                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
+                }
             } else {
                 Log.d("CanvasView", "Flagging at " + x + ", " + y + ".");
                 activity.sweeper.flag(x, y);
