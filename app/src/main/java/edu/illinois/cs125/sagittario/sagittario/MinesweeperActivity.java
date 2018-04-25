@@ -10,6 +10,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 
@@ -31,6 +37,8 @@ public class MinesweeperActivity extends AppCompatActivity implements Runnable {
         public Bitmap.Config cfg;
         public int width;
         public int height;
+        public String searchStr;
+
     }
     // transient variables
     private Handler mHandler;
@@ -55,7 +63,8 @@ public class MinesweeperActivity extends AppCompatActivity implements Runnable {
                 } catch (Throwable t) {
                     Log.e("DrawRunner", "Exception: ", t);
                 } finally {
-                    mHandler.postDelayed(this, 30);
+                    if (state == GameState.PLAYING)
+                        mHandler.postDelayed(this, 30);
                 }
             }
         };
@@ -76,6 +85,7 @@ public class MinesweeperActivity extends AppCompatActivity implements Runnable {
         info.cfg = background.getConfig();
         info.width = background.getWidth();
         info.height = background.getHeight();
+        info.searchStr = provider.searchString;
         // setup draw callback
         setupDrawCallback();
     }
@@ -83,6 +93,18 @@ public class MinesweeperActivity extends AppCompatActivity implements Runnable {
     private void loadFromBundle(Bundle savedInstanceState){
         sweeper = (MineSweeper) savedInstanceState.getSerializable("sweeper");
         info = (BitmapInfo) savedInstanceState.getSerializable("bufferInfo");
+        try {
+            File outFile = new File(getCacheDir(), "image.dat");
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(outFile));
+            info = (BitmapInfo)in.readObject();
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // start the image search and load the background
+            app = (SagittarioApplication) this.getApplication();
+            provider = app.createImageProvider(info.searchStr, this);
+            loading.setVisibility(View.VISIBLE);
+        }
         createBackgroundFromInfo(info);
     }
 
@@ -140,6 +162,15 @@ public class MinesweeperActivity extends AppCompatActivity implements Runnable {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        try {
+            File outFile = new File(getCacheDir(), "image.dat");
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(outFile));
+            out.writeObject(info);
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        info.pixels = null;
         outState.putSerializable("bufferInfo", info);
         outState.putSerializable("sweeper", sweeper);
     }
