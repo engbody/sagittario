@@ -81,46 +81,6 @@ public class MineSweeper implements Serializable {
         return count;
     }
 
-    private static void printGrid(final int[][] grid) {
-        System.out.println();
-        for (int j = 0; j < grid.length; j++) {
-            System.out.print("|");
-            for (int i = 0; i < grid.length; i++) {
-                if (grid[i][j] == 9) {
-                    System.out.print("X|");
-                } else {
-                    System.out.print(grid[i][j] + "|");
-                }
-            }
-            System.out.println();
-        }
-    }
-
-    // displays what the player would see
-    private void displayGrid() {
-        System.out.println("  <DISPLAY GRID>");
-        System.out.println(" 0 1 2 3 4 5 6 7");
-        for (int j = 0; j < this.fieldSize; j++) {
-            System.out.print("|");
-            for (int i = 0; i < this.fieldSize; i++) {
-                if (this.displayGrid[i][j] == COVERED) {
-                    System.out.print("O");
-                } else if (this.displayGrid[i][j] == UNCOVERED) {
-                    if (this.neighborGrid[i][j] == COVERED) {
-                        System.out.print("_");
-                    } else {
-                        System.out.print(this.neighborGrid[i][j]);
-                    }
-                } else if (this.displayGrid[i][j] == FLAGGED) {
-                    System.out.print("F");
-                }
-                System.out.print("|");
-            }
-            System.out.print(" " + j);
-            System.out.println();
-        }
-    }
-
     // flags a tile
     public void flag(final int xCoord, final int yCoord) {
         if(outOfBounds(xCoord, yCoord)){
@@ -202,33 +162,6 @@ public class MineSweeper implements Serializable {
         this.reveal(xCoord - 1, yCoord + 1);
     }
 
-    // Displays game over screen
-    private void displayGameOver() {
-        this.gameOver = true;
-        System.out.println("  <GAME OVER!>");
-        for (int j = 0; j < this.fieldSize; j++) {
-            System.out.print("|");
-            for (int i = 0; i < this.fieldSize; i++) {
-                if (this.displayGrid[i][j] == 0) {
-                    if (this.grid[i][j]) {
-                        System.out.print("X");
-                    } else {
-                        System.out.print("O");
-                    }
-                } else if (this.displayGrid[i][j] == 1) {
-                    if (this.neighborGrid[i][j] == 0) {
-                        System.out.print("_");
-                    } else {
-                        System.out.print(this.neighborGrid[i][j]);
-                    }
-                } else if (this.displayGrid[i][j] == 2) {
-                    System.out.print("F");
-                }
-                System.out.print("|");
-            }
-            System.out.println();
-        }
-    }
 
     public MineSweeper(final int size, final int numBombs) {
         this.fieldSize = size;
@@ -239,61 +172,5 @@ public class MineSweeper implements Serializable {
         displayGrid = new int[this.fieldSize][this.fieldSize];
         this.initializeGrid();
         this.updateNeighbors();
-    }
-
-    public static void main(String[] unused) {
-        MineSweeper x = new MineSweeper(8, 10);
-        while (!x.gameOver) {
-            Scanner reader = new Scanner(System.in); // Reading from System.in
-            for (int i = 0; i < 50; i++) {
-                System.out.println();
-            }
-            x.displayGrid();
-            System.out.println("Flags: |" + (x.nBombs - x.flagCount) + "|" + x.tilesUncovered);
-            System.out.print("Enter \"flag\" or \"choose\": ");
-            String input = reader.nextLine();
-            if (input.equals("flag")) {
-                System.out.println("Coordinates to Flag");
-                System.out.print("x: ");
-                int a = reader.nextInt(); // Scans the next token of the input as an int.
-                System.out.print("y: ");
-                int b = reader.nextInt();
-                x.flag(a, b);
-            } else if (input.equals("choose")) {
-                System.out.println("Coordinates to Reveal");
-                System.out.print("x: ");
-                int a = reader.nextInt(); // Scans the next token of the input as an int.
-                System.out.print("y: ");
-                int b = reader.nextInt();
-                x.choose(a, b);
-                if (x.gameOver) {
-                    x.displayGameOver();
-                    if (x.gameWon) {
-                        System.out.println("but also game WON!");
-                    }
-                }
-            } else if (input.equals("game over")) {
-                for (int i = 0; i < 50; i++) {
-                    System.out.println();
-                }
-                x.displayGameOver();
-            } else if (input.equals("reveal")) {
-                for (int i = 0; i < 50; i++) {
-                    System.out.println();
-                }
-                System.out.println("> Displaying Neighbors");
-                MineSweeper.printGrid(x.neighborGrid);
-                System.out.print("Type any char to continue... ");
-                input = reader.next();
-            } else if (input.equals("help")) {
-                System.out.println("");
-                System.out.println(">COMMANDS:");
-                System.out.println("help: Get list of commands");
-                System.out.println("reveal: Uncover all tiles");
-                System.out.println("game over: End the game");
-                System.out.print("Type any char to continue... ");
-                input = reader.next();
-            }
-        }
     }
 }
