@@ -2,6 +2,8 @@ package edu.illinois.cs125.sagittario.sagittario;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -9,30 +11,16 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.nio.ByteBuffer;
 
 public class CanvasView extends View {
     public MinesweeperActivity activity;
     private Rect boundingRect, rect2;
     private Paint paint;
-
-    /**
-     * Simple constructor to use when creating a view from code.
-     *
-     * @param context The Context the view is running in, through which it can
-     *                access the current theme, resources, etc.
-     */
-    public CanvasView(Context context) {
-        super(context);
-        int xSize = this.getWidth();
-        int ySize = this.getHeight();
-
-        boundingRect = new Rect(0, 0, xSize, ySize);
-        rect2 = new Rect(0, 0, 0, 0);
-        paint = new Paint();
-        setWillNotDraw(false);
-    }
 
 
     /**
@@ -54,6 +42,7 @@ public class CanvasView extends View {
         paint.setStrokeWidth(2);
         paint.setTextSize(32 * getResources().getDisplayMetrics().density);
         setWillNotDraw(false);
+        setFocusable(true);
         setMinimumHeight(800);
         setMinimumWidth(640);
     }
@@ -92,6 +81,16 @@ public class CanvasView extends View {
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (event.getUnicodeChar() == 'a'){
+            Log.d("CanvasView", "Recycling Background");
+            activity.background.recycle();
+
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         if (widthMeasureSpec == 0 || heightMeasureSpec == 0) {
             DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -111,6 +110,15 @@ public class CanvasView extends View {
             canvas.drawColor(0xFFCCFF);
             return;
         }
+
+        if (activity.background.isRecycled()){
+            activity.createBackgroundFromInfo(activity.info);
+        }
+
+        if (activity.flag.isRecycled() || activity.bomb.isRecycled()){
+            activity.loadBitmaps();
+        }
+
 //        Log.v("Canvas View", "Drawing");
         // todo draw the field
         final int deltaX = this.getWidth() / activity.sweeper.fieldSize;

@@ -1,9 +1,10 @@
 package edu.illinois.cs125.sagittario.sagittario;
 
+import java.io.Serializable;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class MineSweeper {
+public class MineSweeper implements Serializable {
 
     public static final int COVERED = 0;
     public static final int UNCOVERED = 1;
