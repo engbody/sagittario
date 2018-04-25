@@ -25,13 +25,11 @@ import java.util.Map;
 import java.util.Random;
 
 public class ImageProvider {
-    private final String searchString;
+    public final String searchString;
     private String contentUrl;
 
     private Bitmap image;
     private RequestQueue queue;
-    // async:
-    private volatile boolean ready = false;
     /**
      * This is the API URL endpoint for the Bing Image search API.
      */
@@ -72,8 +70,6 @@ public class ImageProvider {
                                         InputStream input = connection.getInputStream();
                                         ImageProvider.this.image = BitmapFactory.decodeStream(input);
                                         input.close();
-                                        ///
-                                        ready = true;
                                         Log.e("Image Provider", "Download Complete!");
                                         run.run();
                                         Log.e("Image Provider", "Ran runnable");
@@ -85,7 +81,6 @@ public class ImageProvider {
                             t.start();
                             return;
                         } catch (Throwable t) {
-                            // TODO handle throwable
                             t.printStackTrace();
                             Toast.makeText(c, "Error " + t.toString(),
                                     Toast.LENGTH_LONG).show();
@@ -108,22 +103,6 @@ public class ImageProvider {
             }
         };
         this.queue.add(request);
-    }
-
-    public synchronized boolean isReady() {
-        return ready;
-    }
-
-    /**
-     * Cuts
-     */
-    private void process() {
-        //
-    }
-
-    public Bitmap getImageFor(int x, int y) {
-        //
-        return image;
     }
 
     public Bitmap getBackground() {

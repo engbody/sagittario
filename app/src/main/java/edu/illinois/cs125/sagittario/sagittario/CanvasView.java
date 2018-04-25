@@ -3,23 +3,18 @@ package edu.illinois.cs125.sagittario.sagittario;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-
-import java.nio.ByteBuffer;
 
 public class CanvasView extends View {
     public MinesweeperActivity activity;
@@ -76,6 +71,7 @@ public class CanvasView extends View {
             if(timeDown < 300) {
                 Log.d("CanvasView", "Revealing at " + x + ", " + y + ".");
                 activity.sweeper.choose(x, y);
+                // handle win/lose conditions
                 if (activity.sweeper.gameOver) {
                     if (activity.sweeper.gameWon) {
                         // WIN ACTIVITY
@@ -176,8 +172,6 @@ public class CanvasView extends View {
                 rect2.bottom = offsetY + deltaY * (j + 1);
                 // draw covered tiles
                 if (activity.sweeper.displayGrid[i][j] != MineSweeper.UNCOVERED) {
-//                    activity.tile.setBounds(rect2);
-//                    activity.tile.draw(canvas);
                     activity.uncovered.setBounds(rect2);
                     activity.uncovered.draw(canvas);
                 }
@@ -186,8 +180,6 @@ public class CanvasView extends View {
                     canvas.drawBitmap(activity.flag, null, rect2, null);
                 }
                 if (activity.sweeper.displayGrid[i][j] == MineSweeper.UNCOVERED) {
-//                    activity.uncovered.setBounds(rect2);
-//                    activity.uncovered.draw(canvas);
                     final int count = activity.sweeper.neighborGrid[i][j];
                     if (count == 9) {
                         canvas.drawBitmap(activity.bomb, null, rect2, null);

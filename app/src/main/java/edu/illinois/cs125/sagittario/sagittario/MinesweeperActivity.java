@@ -19,11 +19,12 @@ public class MinesweeperActivity extends AppCompatActivity implements Runnable {
     protected ImageProvider provider;
     protected CanvasView view;
     private ProgressBar loading;
-    //
+    // is the activity ready to play?
     protected boolean loaded = false;
-    //
+    // instance info
+    protected GameState state;
     protected MineSweeper sweeper;
-    protected Bitmap background;
+    protected BitmapInfo info = new BitmapInfo();
 
     public static class BitmapInfo implements Serializable{
         public byte[] pixels;
@@ -31,13 +32,12 @@ public class MinesweeperActivity extends AppCompatActivity implements Runnable {
         public int width;
         public int height;
     }
-
-    protected BitmapInfo info = new BitmapInfo();
+    // transient variables
+    private Handler mHandler;
+    protected Bitmap background;
     protected Drawable tile, uncovered;
     protected Bitmap flag;
     protected Bitmap bomb;
-    protected GameState state;
-    private Handler mHandler;
 
 
     public enum GameState{

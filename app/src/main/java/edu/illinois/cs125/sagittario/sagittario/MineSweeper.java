@@ -81,20 +81,6 @@ public class MineSweeper implements Serializable {
         return count;
     }
 
-    // Displays the Bomb Grid or Neighbor Grid
-    //     - Created for debugging
-    private static void printGrid(final boolean[][] grid) {
-        System.out.println();
-        for (int j = 0; j < grid.length; j++) {
-            System.out.print("|");
-            for (int i = 0; i < grid.length; i++) {
-                char val = (grid[i][j]) ? 'X' : 'O';
-                System.out.print(val + "|");
-            }
-            System.out.println();
-        }
-    }
-
     private static void printGrid(final int[][] grid) {
         System.out.println();
         for (int j = 0; j < grid.length; j++) {
@@ -173,31 +159,6 @@ public class MineSweeper implements Serializable {
         }
     }
 
-    /**
-     * this.displayGrid[xCoord][yCoord] = 1;
-     * int a;
-     * int b;
-     * a = xCoord + 1;
-     * b = yCoord;
-     * if (a < this.fieldSize && b < this.fieldSize && a >= 0 && b >= 0 && this.neighborGrid[a][b] == 0 ) {
-     * this.reveal(a, b);
-     * }
-     * a = xCoord - 1;
-     * b = yCoord;
-     * if (a < this.fieldSize && b < this.fieldSize && a >= 0 && b >= 0 && this.neighborGrid[a][b] == 0 ) {
-     * this.reveal(a, b);
-     * }
-     * a = xCoord;
-     * b = yCoord + 1;
-     * if (a < this.fieldSize && b < this.fieldSize && a >= 0 && b >= 0 && this.neighborGrid[a][b] == 0 ) {
-     * this.reveal(a, b);
-     * }
-     * a = xCoord;
-     * b = yCoord - 1;
-     * if (a < this.fieldSize && b < this.fieldSize && a >= 0 && b >= 0 && this.neighborGrid[a][b] == 0 ) {
-     * this.reveal(a, b);
-     * }
-     **/
     // Reveals all inter-connected 0 spaces;
     public void reveal(final int xCoord, final int yCoord) {
         System.out.println("Running at coords (" + xCoord + "," + yCoord + ")");
@@ -221,7 +182,6 @@ public class MineSweeper implements Serializable {
     }
 
     public void reveal(final int xCoord, final int yCoord, final boolean check) {
-        System.out.println("FIRST RUN! :)");
         if (outOfBounds(xCoord, yCoord)) {
             return;
         }
