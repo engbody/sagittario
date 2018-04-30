@@ -77,6 +77,17 @@ public class MinesweeperActivity extends AppCompatActivity implements Runnable {
         Log.e("MineSweeper", "Re-entered Activity!");
         // create bitmap info
         background = provider.getBackground();
+        if (background == null){
+            Log.d("MineSweeper", "Bing did not load");
+            info = new BitmapInfo();
+            info.width = 1;
+            info.height = 1;
+            info.cfg = Bitmap.Config.ARGB_8888;
+            info.pixels = new byte[4];
+            createBackgroundFromInfo(info);
+            setupDrawCallback();
+            return;
+        }
         int size = background.getRowBytes() * background.getHeight();
         ByteBuffer imageBuffer = ByteBuffer.allocate(size);
         background.copyPixelsToBuffer(imageBuffer);
@@ -104,6 +115,7 @@ public class MinesweeperActivity extends AppCompatActivity implements Runnable {
             app = (SagittarioApplication) this.getApplication();
             provider = app.createImageProvider(info.searchStr, this);
             loading.setVisibility(View.VISIBLE);
+            return;
         }
         createBackgroundFromInfo(info);
     }

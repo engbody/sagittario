@@ -6,9 +6,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.JsonArray;
@@ -92,6 +95,10 @@ public class ImageProvider {
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(c, "Error " + error.toString() + "\n" +
                                 error.networkResponse, Toast.LENGTH_LONG).show();
+                        error.printStackTrace();
+                        // network error!
+                        image = null;
+                        run.run();
                     }
                 }
         ) {
@@ -102,6 +109,9 @@ public class ImageProvider {
                 return m;
             }
         };
+        // set the retry policy
+        RetryPolicy retryPolicy = new DefaultRetryPolicy(2500,2, 1);
+        request.setRetryPolicy(retryPolicy);
         this.queue.add(request);
     }
 

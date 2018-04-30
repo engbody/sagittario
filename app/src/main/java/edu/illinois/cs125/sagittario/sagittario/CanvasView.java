@@ -14,6 +14,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.SoundEffectConstants;
 import android.view.View;
 
 public class CanvasView extends View {
@@ -62,7 +63,9 @@ public class CanvasView extends View {
             return true;
         }
 
+//        android.app.
         if (event.getAction() == MotionEvent.ACTION_UP && activity.loaded){
+            this.playSoundEffect(SoundEffectConstants.CLICK);
             final int deltaX = this.getWidth() / activity.sweeper.fieldSize;
             final int deltaY = this.getHeight() / activity.sweeper.fieldSize;
             int x = (int) event.getX() / deltaX;
@@ -73,6 +76,7 @@ public class CanvasView extends View {
                 activity.sweeper.choose(x, y);
                 // handle win/lose conditions
                 if (activity.sweeper.gameOver) {
+                    this.invalidate();
                     if (activity.sweeper.gameWon) {
                         // WIN ACTIVITY
                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
